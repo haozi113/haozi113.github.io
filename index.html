@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>钱俊昊 · 个人主页</title>
+<meta name="description" content="你好，我是钱俊昊——上海师范大学本科在读（大三），主要精力放在数学建模与数据分析上。这里是我的个人主页，记录我的竞赛与成长经历。" />
+<meta name="theme-color" content="#f6f7fb" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👋</text></svg>" />
+<link rel="stylesheet" href="styles.css" />
+<script>
+  /* 在首屏渲染前决定主题，避免闪白 */
+  (function () {
+    try {
+      var saved = localStorage.getItem('theme');
+      var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.dataset.theme = saved || (prefersDark ? 'dark' : 'light');
+    } catch (e) { /* 忽略 */ }
+  })();
+</script>
+</head>
+<body>
+
+<!-- 背景装饰 -->
+<div class="backdrop" aria-hidden="true">
+  <span class="blob blob-1"></span>
+  <span class="blob blob-2"></span>
+  <span class="blob blob-3"></span>
+  <span class="grid-lines"></span>
+</div>
+
+<!-- ========== 顶部导航 ========== -->
+<header class="site-header" id="siteHeader">
+  <div class="container nav">
+    <a class="brand" href="#top">
+      <span class="brand-mark">钱</span>
+      <span class="brand-text">钱俊昊</span>
+    </a>
+
+    <nav class="nav-menu" id="navMenu" aria-label="主导航">
+      <a href="#top" class="nav-link is-active">首页</a>
+      <a href="#about" class="nav-link">关于</a>
+      <a href="#skills" class="nav-link">技能</a>
+      <a href="#awards" class="nav-link">竞赛</a>
+      <a href="#education" class="nav-link">教育</a>
+      <a href="#contact" class="nav-link">联系</a>
+    </nav>
+
+    <div class="nav-actions">
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="切换深色模式">
+        <svg class="ico ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <circle cx="12" cy="12" r="4.2" />
+          <path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6" />
+        </svg>
+        <svg class="ico ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a7 7 0 1 0 10.5 10.5Z" />
+        </svg>
+      </button>
+
+      <button class="icon-btn menu-btn" id="menuToggle" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="navMenu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ========== 首屏 ========== -->
+  <section class="section hero">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <p class="hero-hello reveal"><span class="wave">👋</span> 你好，我是</p>
+        <h1 class="hero-name reveal">钱俊昊</h1>
+        <p class="hero-role reveal">
+          我是 <span class="typed-wrap"><span id="typed">数学建模爱好者</span><i class="caret"></i></span>
+        </p>
+        <p class="hero-desc reveal">
+          目前在上海师范大学读本科，大三。比起把话说得多漂亮，
+          我更在意能不能把一个现实里的问题翻译成数学语言，
+          再用模型算出站得住的答案。数学建模是我这两年投入最多的方向，
+          也靠着它拿过几个奖，还在继续补自己的短板。
+        </p>
+        <div class="hero-cta reveal">
+          <a class="btn btn-primary" href="#awards">
+            看看我的竞赛
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a class="btn btn-ghost" href="#contact">联系我</a>
+        </div>
+
+        <ul class="socials reveal" aria-label="社交链接">
+          <li>
+            <a href="mailto:1000572273@smail.shnu.edu.cn" aria-label="邮箱" title="邮箱">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.6"/><path d="m3.6 7 8.4 6 8.4-6"/></svg>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.shnu.edu.cn/" target="_blank" rel="noopener" aria-label="上海师范大学" title="上海师范大学">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.4 12 5l9 4.4-9 4.4-9-4.4Z"/><path d="M6.6 11.6v4.1c0 1.2 2.4 2.2 5.4 2.2s5.4-1 5.4-2.2v-4.1"/><path d="M12 14.2V19"/></svg>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="hero-card reveal">
+        <!-- 想换成真人照片：把下面 .avatar 整块替换为 <img class="avatar" src="avatar.jpg" alt="钱俊昊" /> -->
+        <div class="avatar" role="img" aria-label="头像占位">钱</div>
+        <div class="hero-card-body">
+          <p class="hero-card-name">钱俊昊</p>
+          <p class="hero-card-title">本科在读（大三）· 数学建模方向</p>
+          <p class="status"><span class="dot"></span> 正在准备新的建模竞赛</p>
+        </div>
+        <span class="float-chip chip-a">📐 数学建模</span>
+        <span class="float-chip chip-b">🏅 竞赛获奖 3 项</span>
+      </div>
+    </div>
+
+    <div class="container">
+      <ul class="stats reveal">
+        <li><strong data-count="4" data-suffix="项">0</strong><span>竞赛经历</span></li>
+        <li><strong data-count="3" data-suffix="项">0</strong><span>获奖荣誉</span></li>
+        <li><strong data-count="2" data-suffix="项">0</strong><span>数学建模赛事</span></li>
+        <li><strong data-count="3" data-suffix="年">0</strong><span>本科在读（大三）</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ========== 关于我 ========== -->
+  <section class="section" id="about">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">关于我</span>
+        <h2 class="section-title">一点点自我介绍</h2>
+        <p class="section-sub">还在读书的第三年，暂时没有实习经历，所以这里写的主要是校内和竞赛的事。</p>
+      </div>
+
+      <div class="about-grid">
+        <div class="about-text reveal">
+          <p>
+            我是<strong>钱俊昊</strong>，上海师范大学本科在读，现在大三。
+            比起「什么都会一点」，我更愿意把一件事做深，这两年选的是数学建模。
+          </p>
+          <p>
+            数学建模最吸引我的地方是它不挑问题：一个现实里的麻烦，
+            只要能翻译成变量、约束和目标，就可以动手算。
+            所以我会花不少时间在建模上——从读题、选模型、跑数据到把结论写清楚，
+            我更在意模型是不是真的解释了那个问题，而不是套了一个多复杂的公式。
+          </p>
+          <p>
+            竞赛之外，我还在补自己的短板：论文表达、数据处理和团队沟通。
+            目前还没有实习经历，所以特别希望能到真实的场景里练一练。
+            如果你有合适的机会，或者想聊聊建模，欢迎<a href="#contact">写信给我</a>。
+          </p>
+        </div>
+
+        <aside class="about-side">
+          <div class="info-card reveal">
+            <h3>基础信息</h3>
+            <dl class="info-list">
+              <div><dt>学校</dt><dd>上海师范大学</dd></div>
+              <div><dt>年级</dt><dd>本科在读 · 大三</dd></div>
+              <div><dt>所在地</dt><dd>中国 · 上海</dd></div>
+              <div><dt>主攻方向</dt><dd>数学建模 / 数据分析</dd></div>
+              <div><dt>当前状态</dt><dd>寻找实习与科研机会</dd></div>
+              <div><dt>专业</dt><dd>计算机科学与技术</dd></div>
+              <div><dt>邮箱</dt><dd><a href="mailto:1000572273@smail.shnu.edu.cn">1000572273@smail.shnu.edu.cn</a></dd></div>
+            </dl>
+          </div>
+
+          <div class="info-card reveal">
+            <h3>我在关注</h3>
+            <ul class="chip-list">
+              <li>优化模型</li>
+              <li>预测与评价</li>
+              <li>数据分析</li>
+              <li>数学软件</li>
+              <li>论文写作</li>
+              <li>实验设计</li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 技能 ========== -->
+  <section class="section" id="skills">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">技能</span>
+        <h2 class="section-title">我擅长和正在补的</h2>
+        <p class="section-sub">横条是我自己的感受，不是评级，只是让你大致知道我把时间花在哪。</p>
+      </div>
+
+      <div class="skill-grid">
+        <article class="skill-card reveal">
+          <div class="skill-head">
+            <span class="skill-icon">📐</span>
+            <h3>数学建模</h3>
+          </div>
+          <ul class="bars">
+            <li><span class="bar-label">读题与模型选型</span><span class="bar"><i style="--w:88%"></i></span></li>
+            <li><span class="bar-label">数据处理与分析</span><span class="bar"><i style="--w:82%"></i></span></li>
+            <li><span class="bar-label">求解与结果检验</span><span class="bar"><i style="--w:78%"></i></span></li>
+            <li><span class="bar-label">论文写作与排版</span><span class="bar"><i style="--w:85%"></i></span></li>
+          </ul>
+        </article>
+
+        <article class="skill-card reveal">
+          <div class="skill-head">
+            <span class="skill-icon">🧮</span>
+            <h3>常用工具</h3>
+          </div>
+          <ul class="bars">
+            <li><span class="bar-label">Python</span><span class="bar"><i style="--w:85%"></i></span></li>
+            <li><span class="bar-label">MATLAB</span><span class="bar"><i style="--w:80%"></i></span></li>
+            <li><span class="bar-label">LaTeX 论文排版</span><span class="bar"><i style="--w:85%"></i></span></li>
+            <li><span class="bar-label">Excel / 数据可视化</span><span class="bar"><i style="--w:82%"></i></span></li>
+          </ul>
+        </article>
+
+        <article class="skill-card reveal">
+          <div class="skill-head">
+            <span class="skill-icon">📚</span>
+            <h3>知识储备</h3>
+          </div>
+          <ul class="chip-list">
+            <li>优化模型</li>
+            <li>概率统计</li>
+            <li>回归分析</li>
+            <li>预测模型</li>
+            <li>评价模型</li>
+            <li>微分方程</li>
+            <li>数值计算</li>
+            <li>算法基础</li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 竞赛与荣誉 ========== -->
+  <section class="section" id="awards">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">竞赛与荣誉</span>
+        <h2 class="section-title">参加过的比赛</h2>
+        <p class="section-sub">从数学到化学实验，下面都是我真实拿过奖或者完整参与过的比赛。</p>
+      </div>
+
+      <div class="project-grid awards-grid">
+        <article class="project-card reveal">
+          <div class="project-thumb thumb-1"><span>二等</span></div>
+          <div class="project-body">
+            <div class="project-top">
+              <h3>数学竞赛 · 省级二等奖</h3>
+              <span class="project-tag">省级</span>
+            </div>
+            <p>省级数学竞赛，考的是数学基本功和解题速度，最后拿到二等奖。备赛时把以前学过但没吃透的内容重新过了一遍，收获比名次大。</p>
+            <ul class="tech-list">
+              <li>数学分析</li><li>解题能力</li><li>限时笔试</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="project-card reveal">
+          <div class="project-thumb thumb-2"><span>省二</span></div>
+          <div class="project-body">
+            <div class="project-top">
+              <h3>数学建模 MathorCup · 省二等奖</h3>
+              <span class="project-tag">建模</span>
+            </div>
+            <p>三人一队、几天时间，把一道开放性问题从选题做到成稿。最大的收获是学会在信息不全的时候先动手建模，再边做边修。</p>
+            <ul class="tech-list">
+              <li>团队协作</li><li>建模</li><li>论文写作</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="project-card reveal">
+          <div class="project-thumb thumb-3"><span>参赛</span></div>
+          <div class="project-body">
+            <div class="project-top">
+              <h3>全国大学生数学建模竞赛（国赛）</h3>
+              <span class="project-tag">国赛</span>
+            </div>
+            <p>和全国队伍同场，完整走了一遍「建模 — 求解 — 写作」的流程，也更清楚地看到了自己在模型选择和论文表达上的差距。</p>
+            <ul class="tech-list">
+              <li>数学建模</li><li>优化模型</li><li>论文写作</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="project-card reveal">
+          <div class="project-thumb thumb-4"><span>三等</span></div>
+          <div class="project-body">
+            <div class="project-top">
+              <h3>上海市大学生化学实验竞赛</h3>
+              <span class="project-tag">上海赛区</span>
+            </div>
+            <p>比赛从方案设计、实操到数据处理和误差分析都要自己完成，最终获得上海赛区三等奖。</p>
+            <ul class="tech-list">
+              <li>实验设计</li><li>实验创新设计</li><li>误差分析</li>
+            </ul>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 教育经历 ========== -->
+  <section class="section" id="education">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">教育经历</span>
+        <h2 class="section-title">现在的状态</h2>
+        <p class="section-sub">还在读书，所以这一栏比较短，但写的都是真的。</p>
+      </div>
+
+      <ol class="timeline">
+        <li class="tl-item reveal">
+          <div class="tl-dot"></div>
+          <div class="tl-card">
+            <span class="tl-time">2024 — 至今</span>
+            <h3>上海师范大学 · 本科在读（大三）</h3>
+            <p>在校完成数学类基础课程，课外时间主要花在数学建模上：从读题、建模、算结果到排版论文，尽量每年完整走一遍流程。</p>
+            <ul class="tl-tags"><li>数学建模</li><li>数据分析</li><li>学科竞赛</li></ul>
+          </div>
+        </li>
+
+        <li class="tl-item reveal">
+          <div class="tl-dot"></div>
+          <div class="tl-card">
+            <span class="tl-time">接下来</span>
+            <h3>寻找实习与科研机会</h3>
+            <p>目前还没有实习经历，正在把建模能力往真实的场景上靠：希望找到一份数据分析方向的实习，或者跟着老师做一点实际的课题。</p>
+            <ul class="tl-tags"><li>数据分析</li><li>科研训练</li><li>实习</li></ul>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ========== 联系 ========== -->
+  <section class="section" id="contact">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">联系</span>
+        <h2 class="section-title">有想法？随时聊聊</h2>
+        <p class="section-sub">竞赛组队、实习机会，还是单纯想聊聊数学建模，我都很欢迎。</p>
+      </div>
+
+      <div class="contact-card reveal">
+        <div class="contact-copy">
+          <h3>给我发一封邮件吧</h3>
+          <p>通常我会在 1 到 2 个工作日内回复。如果你愿意，也可以先看看上面的竞赛经历再决定聊什么。</p>
+          <ul class="contact-meta">
+            <li><span>邮箱</span>1000572273@smail.shnu.edu.cn</li>
+            <li><span>学校</span>上海师范大学</li>
+          </ul>
+        </div>
+        <div class="contact-actions">
+          <a class="btn btn-primary" href="mailto:1000572273@smail.shnu.edu.cn">
+            ✉️ 发送邮件
+          </a>
+          <button class="btn btn-ghost" type="button" data-copy="1000572273@smail.shnu.edu.cn">复制邮箱地址</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========== 页脚 ========== -->
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <p>© <span id="year">2026</span> 钱俊昊 · 保留所有权利</p>
+    <p class="footer-note">用 HTML、CSS 与一点点 JavaScript 手工制作</p>
+  </div>
+</footer>
+
+<button class="to-top" id="toTop" type="button" aria-label="回到顶部">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg>
+</button>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
