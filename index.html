@@ -43,6 +43,7 @@
       <a href="#skills" class="nav-link">技能</a>
       <a href="#awards" class="nav-link">竞赛</a>
       <a href="#education" class="nav-link">教育</a>
+      <a href="#twin" class="nav-link">问答</a>
       <a href="#contact" class="nav-link">联系</a>
     </nav>
 
@@ -86,6 +87,7 @@
             看看我的竞赛
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
+          <a class="btn btn-ghost" href="#twin">和数字分身聊聊</a>
           <a class="btn btn-ghost" href="#contact">联系我</a>
         </div>
 
@@ -342,6 +344,73 @@
     </div>
   </section>
 
+  <!-- ========== 数字分身（离线问答） ========== -->
+  <section class="section" id="twin">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="eyebrow">数字分身</span>
+        <h2 class="section-title">有问题可以直接问我</h2>
+        <p class="section-sub">下面这个小助手用我整理好的资料回答常见问题。它现在还是预设问答，没有接入大模型，答不上来会直接告诉你。</p>
+      </div>
+
+      <div class="twin-card reveal">
+        <div class="twin-head">
+          <div class="twin-avatar" aria-hidden="true">钱</div>
+          <div>
+            <p class="twin-name">
+              钱俊昊的数字分身
+              <span class="twin-ver">v0.1 · 离线预设问答</span>
+            </p>
+            <p class="twin-status"><span class="dot"></span> 在线，但只会回答我知道答案的问题</p>
+          </div>
+        </div>
+
+        <div class="chat-log" id="chatLog" aria-live="polite" aria-label="对话记录">
+          <div class="msg msg-bot">你好，我是钱俊昊的数字分身 👋 你可以问我：现在在做什么、参加过哪些竞赛、会哪些工具、怎么联系我。</div>
+        </div>
+
+        <div class="chat-chips" id="chatChips" aria-label="常见问题">
+          <button type="button" data-q="你现在在做什么？">你现在在做什么？</button>
+          <button type="button" data-q="参加过哪些竞赛？">参加过哪些竞赛？</button>
+          <button type="button" data-q="你会哪些工具？">你会哪些工具？</button>
+          <button type="button" data-q="你数学建模水平怎么样？">你数学建模水平怎么样？</button>
+          <button type="button" data-q="怎么联系你？">怎么联系你？</button>
+        </div>
+
+        <form class="chat-form" id="chatForm">
+          <input id="chatInput" type="text" autocomplete="off" placeholder="输入你的问题，比如：你现在在做什么？" aria-label="输入你的问题" />
+          <button class="btn btn-primary" type="submit">发送</button>
+        </form>
+      </div>
+
+      <div class="faq-block reveal">
+        <h3 class="faq-title">常见问题（上面那个分身也答得上来）</h3>
+        <div class="faq-list">
+          <details class="faq-item">
+            <summary>你现在在做什么？</summary>
+            <p>上海师范大学计算机科学与技术专业本科在读，大三。最近主要把时间放在数学建模上，同时也在找数据分析方向的实习或科研机会。</p>
+          </details>
+          <details class="faq-item">
+            <summary>你有哪些竞赛经历？</summary>
+            <p>一共参加过 4 项，拿到 3 个奖：数学竞赛省级二等奖、数学建模 MathorCup 省级二等奖、上海市大学生化学实验竞赛（含实验创新设计）上海赛区三等奖；此外完整参加了全国大学生数学建模竞赛（国赛）。</p>
+          </details>
+          <details class="faq-item">
+            <summary>你有实习经历吗？</summary>
+            <p>目前还没有。正在找数据分析方向的实习，或者跟老师做一些实际课题，如果你有合适的机会欢迎联系我。</p>
+          </details>
+          <details class="faq-item">
+            <summary>怎么联系你最快？</summary>
+            <p>发邮件最方便：1000572273@smail.shnu.edu.cn，我通常 1 到 2 个工作日内回复。</p>
+          </details>
+          <details class="faq-item">
+            <summary>这个主页是怎么做的？</summary>
+            <p>纯静态的 HTML、CSS 和 JavaScript，没有框架也没有后端，托管在 GitHub Pages 上。数字分身目前是离线预设问答，还没有接入大模型。</p>
+          </details>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ========== 联系 ========== -->
   <section class="section" id="contact">
     <div class="container">
@@ -381,6 +450,11 @@
 
 <button class="to-top" id="toTop" type="button" aria-label="回到顶部">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg>
+</button>
+
+<button class="chat-launcher" id="chatLauncher" type="button" aria-label="跳到数字分身问答">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-8 8H8l-4 3v-5.6A8 8 0 0 1 12 4a8 8 0 0 1 9 8Z"/></svg>
+  问我
 </button>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>

@@ -248,7 +248,128 @@
     });
   });
 
-  /* ---------- 9. 页脚年份 ---------- */
+  /* ---------- 9. 数字分身：离线预设问答 ---------- */
+  const chatLog = $('#chatLog');
+  const chatForm = $('#chatForm');
+  const chatInput = $('#chatInput');
+
+  if (chatLog && chatForm && chatInput) {
+    const EMAIL = '1000572273@smail.shnu.edu.cn';
+
+    // 知识库：每条 = 触发词 + 我的真实资料。
+    // 改资料时先改根目录的《分身说明书.md》，再同步到这里，两边保持一致。
+    const KB = [
+      {
+        keys: ['做什么', '在做什么', '最近', '现在', '状态', '大几', '年级', '学校', '专业', '读什么', '介绍'],
+        a: '我现在是上海师范大学计算机科学与技术专业的本科在读生，大三。最近主要把时间放在数学建模上，同时也在找数据分析方向的实习或者跟老师做实际课题。',
+      },
+      {
+        keys: ['竞赛', '比赛', '获奖', '奖', '荣誉', '名次'],
+        a: '我一共参加过 4 项竞赛，拿到 3 个奖：数学竞赛省级二等奖、数学建模 MathorCup 省级二等奖、上海市大学生化学实验竞赛（含实验创新设计）上海赛区三等奖；此外还完整参加了全国大学生数学建模竞赛（国赛）。',
+      },
+      {
+        keys: ['建模', '模型', '数模', '水平'],
+        a: '数学建模是我投入最多的方向。我比较在意模型是不是真的解释了那个问题，而不是套一个多复杂的公式。流程上从读题、选模型、跑数据到排版论文，我都会完整走一遍。',
+      },
+      {
+        keys: ['工具', '技能', '软件', 'python', 'matlab', 'latex', 'excel', '擅长', '会什么'],
+        a: '最常用的是 Python、MATLAB 和 LaTeX，Excel 和数据可视化也一直在用。能力上集中在数学建模：读题与模型选型、数据处理与分析、求解与结果检验、论文写作与排版。',
+      },
+      {
+        keys: ['实习', '工作', '求职', '招聘', '简历', '就业'],
+        a: '我目前还没有实习经历，正在找数据分析方向的实习，或者跟老师做一点实际课题。如果你有合适的机会，欢迎发邮件给我。',
+      },
+      {
+        keys: ['联系', '邮箱', '微信', '电话', '找你', '合作'],
+        a: '发邮件最方便：' + EMAIL + '，我通常会在 1 到 2 个工作日内回复。',
+      },
+      {
+        keys: ['主页', '网站', '这个页面', '技术', '怎么做的'],
+        a: '这个主页是纯静态的 HTML、CSS 和 JavaScript，没有框架也没有后端，双击文件就能打开，也能直接托管在 GitHub Pages 上。',
+      },
+      {
+        keys: ['手机号', '电话', '住址', '身份证', '成绩单', '隐私', '家庭'],
+        a: '这些私人信息我不会放在公开页面上。如果确实需要，请发邮件到 ' + EMAIL + '，由我本人回复你。',
+      },
+      {
+        keys: ['评价', '比较', '谁更', '你觉得', '好不好'],
+        a: '别人的事我不方便评价，只讲我自己的情况。你想知道我的哪一段经历，我可以细说。',
+      },
+      {
+        keys: ['以后', '将来', '未来', '规划', '打算', '考研', '保研', '目标', '想做什么', '想干嘛'],
+        a: '方向上是数据分析和建模相关，但具体还没定死，我不太想给自己说不准的承诺。等有了确定的计划，我会更新到主页上。',
+      },
+      {
+        keys: ['写作业', '帮我写', '写代码', '天气', '新闻', '作业'],
+        a: '这个不在我的职责范围里——我只是钱俊昊的数字分身，负责回答和他本人有关的问题。',
+      },
+    ];
+
+    const FALLBACK = '这个我确实不知道，我不想瞎编——我现在只是个离线的预设问答分身，只回答我确实知道的事。你可以换个问法，或者直接发邮件问我：' + EMAIL;
+
+    function findAnswer(question) {
+      const q = String(question).toLowerCase().replace(/\s/g, '');
+      let best = null;
+      let bestScore = 0;
+      KB.forEach((item) => {
+        let score = 0;
+        item.keys.forEach((k) => { if (q.includes(k.toLowerCase())) score += k.length; });
+        if (score > bestScore) { bestScore = score; best = item; }
+      });
+      return best ? best.a : FALLBACK;
+    }
+
+    function addMessage(text, from) {
+      const bubble = document.createElement('div');
+      bubble.className = 'msg ' + (from === 'me' ? 'msg-me' : 'msg-bot');
+      bubble.textContent = text;
+      chatLog.appendChild(bubble);
+      chatLog.scrollTop = chatLog.scrollHeight;
+    }
+
+    function sendQuestion(raw) {
+      const text = String(raw || '').trim();
+      if (!text) return;
+      addMessage(text, 'me');
+      chatInput.value = '';
+      setTimeout(() => addMessage(findAnswer(text), 'bot'), 320);
+    }
+
+    chatForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      sendQuestion(chatInput.value);
+    });
+
+    $$('#chatChips button').forEach((btn) => {
+      btn.addEventListener('click', () => sendQuestion(btn.dataset.q));
+    });
+  }
+
+  /* ---------- 10. 数字分身的浮动入口 ---------- */
+  const chatLauncher = $('#chatLauncher');
+  const twinSection = $('#twin');
+
+  if (chatLauncher && twinSection && chatInput) {
+    chatLauncher.addEventListener('click', () => {
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      twinSection.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+      if (chatInput.focus) {
+        setTimeout(() => chatInput.focus({ preventScroll: true }), reduce ? 0 : 600);
+      }
+    });
+
+    // 人已经站在问答区里了，就把浮动按钮收起来，避免挡内容
+    if ('IntersectionObserver' in window) {
+      const launcherObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          chatLauncher.classList.toggle('is-hidden', entry.isIntersecting);
+        });
+      }, { threshold: 0.12 });
+      launcherObserver.observe(twinSection);
+    }
+  }
+
+  /* ---------- 11. 页脚年份 ---------- */
   const year = $('#year');
   if (year) year.textContent = String(new Date().getFullYear());
 
