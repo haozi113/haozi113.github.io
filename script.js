@@ -248,13 +248,19 @@
     });
   });
 
-  /* ---------- 9. 数字分身：离线预设问答 ---------- */
+  /* ---------- 9. 数字分身：离线知识库 + 可选的真 AI 接口 ----------
+     部署好代理之后，把下面这行填成你的接口地址（不带结尾斜杠），
+     页面就会优先走真模型；接口连不上时自动回落到离线知识库。
+     留空 = 只用离线知识库。 */
+  const TWIN_API = '';
+
   const chatLog = $('#chatLog');
   const chatForm = $('#chatForm');
   const chatInput = $('#chatInput');
 
   if (chatLog && chatForm && chatInput) {
     const EMAIL = '1000572273@smail.shnu.edu.cn';
+    const useAI = TWIN_API.trim().length > 0;
 
     // 知识库：每条 = 触发词 + 我的真实资料。
     // 改资料时先改根目录的《分身说明书.md》，再同步到这里，两边保持一致。
@@ -325,14 +331,67 @@
       bubble.textContent = text;
       chatLog.appendChild(bubble);
       chatLog.scrollTop = chatLog.scrollHeight;
+      return bubble;
     }
 
-    function sendQuestion(raw) {
+    // 走真模型：只请求自己的代理地址，Key 在服务端
+    async function askAI(question) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 20000);
+      try {
+        const res = await fetch(TWIN_API.replace(/\/+$/, '') + '/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question: question }),
+          signal: controller.signal,
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.answer) throw new Error(data.error || ('HTTP ' + res.status));
+        return data.answer;
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
+    let busy = false;
+
+    async function sendQuestion(raw) {
       const text = String(raw || '').trim();
-      if (!text) return;
+      if (!text || busy) return;
       addMessage(text, 'me');
       chatInput.value = '';
-      setTimeout(() => addMessage(findAnswer(text), 'bot'), 320);
+
+      if (!useAI) {
+        setTimeout(() => addMessage(findAnswer(text), 'bot'), 320);
+        return;
+      }
+
+      busy = true;
+      const bubble = addMessage('正在想…', 'bot');
+      bubble.classList.add('msg-wait');
+      try {
+        bubble.textContent = await askAI(text);
+      } catch (err) {
+        bubble.textContent = findAnswer(text);
+        const note = document.createElement('small');
+        note.className = 'msg-note';
+        note.textContent = '（AI 接口暂时连不上，这条来自离线知识库：' + err.message + '）';
+        bubble.appendChild(note);
+      } finally {
+        bubble.classList.remove('msg-wait');
+        busy = false;
+        chatLog.scrollTop = chatLog.scrollHeight;
+      }
+    }
+
+    // 接了真模型就把状态文案改掉，别让页面说谎
+    if (useAI) {
+      const ver = $('#twinVer');
+      const status = $('#twinStatus');
+      const sub = $('#twinSub');
+      if (ver) ver.textContent = 'v0.2 · 已接入 DeepSeek';
+      if (status) status.textContent = '在线，回答由 AI 生成，但边界和资料还是我定的';
+      if (sub) sub.textContent = '下面这个小助手由 DeepSeek 驱动，只依据我整理的《分身说明书》回答；接口不通时会自动回落到预设问答，答不上来它会直说。';
     }
 
     chatForm.addEventListener('submit', (e) => {

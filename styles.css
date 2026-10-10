@@ -837,6 +837,10 @@ button { font: inherit; cursor: pointer; }
   border-bottom-right-radius: 4px;
 }
 
+.msg-wait { opacity: 0.65; }
+
+.msg-note { display: block; margin-top: 0.45rem; font-size: 0.78rem; color: var(--text-mute); }
+
 .chat-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.9rem; }
 
 .chat-chips button {

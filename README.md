@@ -82,6 +82,23 @@ git log --oneline                            # 看历史；要退回某个版本
 
 想回到上一个可用版本：`git checkout HEAD -- .`（丢弃当前未提交的改动）。
 
+## 接入真正的 AI（可选）
+
+默认是离线预设问答。想让它变成真会聊的分身，需要一层服务端代理来保管 API Key
+（**Key 不能写进前端代码**）。代理代码已经写好：`server/worker.js`，对应 Cloudflare Workers。
+
+1. 注册 Cloudflare → **Workers & Pages → Create → Worker**，名字随意（如 `twin-proxy`），先 Deploy。
+2. **Edit code** → 把 `server/worker.js` 全文粘进去 → Deploy。
+3. **Settings → Variables and Secrets** 添加：
+   - `DEEPSEEK_API_KEY` = 你的 DeepSeek Key（类型选 **Secret**）
+   - `DEEPSEEK_MODEL` = 可选，默认 `deepseek-flash`（以 DeepSeek 控制台显示的模型名为准）
+   - `ALLOW_ORIGIN` = 可选，上线后建议改成 `https://haozi113.github.io`
+4. 复制 Worker 地址（形如 `https://twin-proxy.xxx.workers.dev`），填进 `script.js` 顶部的 `TWIN_API`。
+5. 把 `index.html`、`script.js`、`styles.css` 传到 GitHub，刷新页面即可。
+
+代理里已经做了三层保护：单次回答限制 `max_tokens: 400`、单个 IP 每分钟最多 6 次、
+提问最长 300 字。接口不通时页面会自动回落到离线知识库，不会开天窗。
+
 ## 配色方案
 
 改 `styles.css` 顶部 `:root` 中的 `--accent` 和 `--accent-2` 两个值，
