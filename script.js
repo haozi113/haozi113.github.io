@@ -259,7 +259,9 @@
   const ZHIPU = {                 // A 方案：直连配置
     url: 'https://open.bigmodel.cn/api/paas/v4/chat/completions',
     key: '0fe23b0fac3c43f9ac8cc7ce2047a3db.tbT1mlZEP3ShXpnJ',
-    models: ['glm-4.7-flash', 'glm-4.5-flash', 'glm-4-flash'],   // 前面的拥堵就自动换下一个
+    // 按实测速度排序（2026-10-14 测：250414 约 0.6s，4-flash 约 2.8s，4.5-flash 约 3.2s）
+    // 注意 glm-4.7-flash 实测要 20~65 秒，太慢，已从候选里去掉
+    models: ['glm-4-flash-250414', 'glm-4-flash', 'glm-4.5-flash'],
   };
 
   const chatLog = $('#chatLog');
@@ -421,7 +423,7 @@
       let lastError = '';
       for (const model of ZHIPU.models) {
         const controller = new AbortController();
-        const timer = setTimeout(() => controller.abort(), 25000);
+        const timer = setTimeout(() => controller.abort(), 12000);   // 单个模型最多等 12 秒就换下一个
         try {
           const res = await fetch(ZHIPU.url, {
             method: 'POST',
