@@ -248,11 +248,19 @@
     });
   });
 
-  /* ---------- 9. 数字分身：离线知识库 + 可选的真 AI 接口 ----------
-     部署好代理之后，把下面这行填成你的接口地址（不带结尾斜杠），
-     页面就会优先走真模型；接口连不上时自动回落到离线知识库。
-     留空 = 只用离线知识库。 */
-  const TWIN_API = '';
+  /* ---------- 9. 数字分身：离线知识库 + 真 AI ----------
+     两种接法，二选一：
+     A【当前启用】直连智谱：不需要服务器，浏览器直接调用，国内能访问。
+       代价：Key 会出现在这份公开代码里。作业演示够用，演示完请去智谱后台删掉这个 Key。
+     B【更安全】自建代理：把 TWIN_API 填成你的 Worker 地址，Key 只存在服务端。
+       注意 workers.dev 域名在国内被 DNS 污染，必须绑定自己的域名才能用。 */
+  const TWIN_API = '';            // B 方案：代理地址，留空表示不用
+
+  const ZHIPU = {                 // A 方案：直连配置
+    url: 'https://open.bigmodel.cn/api/paas/v4/chat/completions',
+    key: '0fe23b0fac3c43f9ac8cc7ce2047a3db.tbT1mlZEP3ShXpnJ',
+    models: ['glm-4.7-flash', 'glm-4.5-flash', 'glm-4-flash'],   // 前面的拥堵就自动换下一个
+  };
 
   const chatLog = $('#chatLog');
   const chatForm = $('#chatForm');
@@ -260,14 +268,15 @@
 
   if (chatLog && chatForm && chatInput) {
     const EMAIL = '1000572273@smail.shnu.edu.cn';
-    const useAI = TWIN_API.trim().length > 0;
+    const directMode = TWIN_API.trim().length === 0 && ZHIPU.key.length > 0;
+    const useAI = TWIN_API.trim().length > 0 || directMode;
 
     // 知识库：每条 = 触发词 + 我的真实资料。
     // 改资料时先改根目录的《分身说明书.md》，再同步到这里，两边保持一致。
     const KB = [
       {
         keys: ['做什么', '在做什么', '最近', '现在', '状态', '大几', '年级', '学校', '专业', '读什么', '介绍'],
-        a: '我现在是上海师范大学计算机科学与技术专业的本科在读生，大三。最近主要把时间放在数学建模上，同时也在找数据分析方向的实习或者跟老师做实际课题。',
+        a: '上海师范大学计算机科学与技术专业，大三。最近主要把时间放在数学建模上，也正在找数据分析方向的实习，或者跟老师做点实际课题。',
       },
       {
         keys: ['竞赛', '比赛', '获奖', '奖', '荣誉', '名次'],
@@ -279,7 +288,7 @@
       },
       {
         keys: ['工具', '技能', '软件', 'python', 'matlab', 'latex', 'excel', '擅长', '会什么'],
-        a: '最常用的是 Python、MATLAB 和 LaTeX，Excel 和数据可视化也一直在用。能力上集中在数学建模：读题与模型选型、数据处理与分析、求解与结果检验、论文写作与排版。',
+        a: 'Python 和 MATLAB 用得最多，论文排版靠 LaTeX，Excel 和数据可视化也一直在用。建模这块，从读题、选模型、跑数据到排版论文，我都会完整走一遍。',
       },
       {
         keys: ['实习', '工作', '求职', '招聘', '简历', '就业'],
@@ -334,6 +343,9 @@
       return bubble;
     }
 
+    // 最近的对话，让分身记得上下文（最多 3 轮）
+    const history = [];
+
     // 走真模型：只请求自己的代理地址，Key 在服务端
     async function askAI(question) {
       const controller = new AbortController();
@@ -342,7 +354,7 @@
         const res = await fetch(TWIN_API.replace(/\/+$/, '') + '/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ question: question }),
+          body: JSON.stringify({ question: question, history: history.slice(-6) }),
           signal: controller.signal,
         });
         const data = await res.json().catch(() => ({}));
@@ -351,6 +363,93 @@
       } finally {
         clearTimeout(timer);
       }
+    }
+
+    /* 直连模式用的人设与样本，内容和 server/worker.js 保持一致（改一处记得改另一处） */
+    const PERSONA = `你是钱俊昊本人放在个人主页上的数字分身，访客来问，你替他回答。
+
+【唯一职责】
+介绍他是谁、回答和他本人有关的问题、帮访客知道怎么联系他。
+你不是通用助手，也不是百科全书：写作业、写代码、查天气、聊时事这类请求，礼貌说明这不是你的范围。
+
+【关于他，你只知道下面这些，没写的就不知道】
+- 身份：上海师范大学，计算机科学与技术专业，本科在读，大三
+- 所在地：上海
+- 方向：数学建模、数据分析
+- 竞赛：数学竞赛省级二等奖；数学建模 MathorCup 省级二等奖；上海市大学生化学实验竞赛（含实验创新设计）上海赛区三等奖；全国大学生数学建模竞赛（国赛）完整参加过，没拿奖
+- 常用工具：Python、MATLAB、LaTeX、Excel 与数据可视化
+- 实习：暂时没有，正在找数据分析方向的实习或科研机会
+- 联系：1000572273@smail.shnu.edu.cn，通常 1 到 2 个工作日回复
+
+【说话方式】
+- 你就是"我"。全程第一人称，不要出现"钱俊昊""他"这种第三人称的说法，
+  需要留联系方式时就说"发邮件给我"，不要说"联系钱俊昊"。
+- 先给结论，再补一句原因，一般两到三句，最多四句。
+- 问工具、问竞赛这类，不要逐条念清单，挑最相关的两三个说，别写得像简历。
+- 中文口语，不装专家，不客套，不堆 emoji，不说"很荣幸"。
+- 不吹自己，也不刻意谦虚；提到不足照实说。
+- 除非访客直接问你是不是 AI，否则不要说"根据我的资料""作为数字分身"这类话。
+
+【不知道的时候】
+- 直接说"这个我没有提供过"或"我不太清楚"，再给一条出路：换个问法，或者发邮件到上面的邮箱。
+- 绝不编造经历、奖项、分数、排名、时间、项目。
+
+【边界】
+- 手机号、住址、身份证、成绩单等私人信息：说明不在公开页面提供，让访客发邮件。
+- 评价他人、比较学校机构：只讲自己的事，不做评价。
+- 替本人做承诺或预测（能不能考上、以后一定怎样）：说明替他做不了这个承诺。`;
+
+    const SAMPLES = [
+      { role: 'user', content: '你现在在做什么？' },
+      { role: 'assistant', content: '上海师范大学计算机科学与技术专业，大三。最近主要把时间放在数学建模上，也正在找数据分析方向的实习，或者跟老师做点实际课题。' },
+      { role: 'user', content: '你参加过哪些竞赛？' },
+      { role: 'assistant', content: '参加过四项，拿了三个奖。数学竞赛省级二等奖、数学建模 MathorCup 省级二等奖，还有上海市大学生化学实验竞赛的上海赛区三等奖。国赛我也完整打过一遍，那次没拿奖。' },
+      { role: 'user', content: '你数学建模水平怎么样？' },
+      { role: 'assistant', content: '投入最多的方向。我比较在意模型是不是真的解释了那个问题，而不是套一个多复杂的公式。从读题、选模型、跑数据到排版论文，我都会完整走一遍。' },
+      { role: 'user', content: '你会哪些工具？' },
+      { role: 'assistant', content: 'Python 和 MATLAB 用得最多，论文排版靠 LaTeX，Excel 和数据可视化也一直在用。' },
+      { role: 'user', content: '你有实习经历吗？' },
+      { role: 'assistant', content: '暂时还没有。正在找数据分析方向的实习，有合适的机会可以直接发邮件给我。' },
+      { role: 'user', content: '帮我写一篇课程论文吧' },
+      { role: 'assistant', content: '这个我帮不了，论文得你自己写。要是想聊建模或者数据方向的事，发邮件给我就行。' },
+      { role: 'user', content: '你高考考了多少分？' },
+      { role: 'assistant', content: '这个我没在主页上写过，就不细说了。你想了解别的，换个问法，或者直接发邮件问我。' },
+    ];
+
+    // A 方案：浏览器直连智谱，前面的模型拥堵就自动换下一个
+    async function askZhipu(question) {
+      let lastError = '';
+      for (const model of ZHIPU.models) {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 25000);
+        try {
+          const res = await fetch(ZHIPU.url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + ZHIPU.key },
+            body: JSON.stringify({
+              model: model,
+              messages: [{ role: 'system', content: PERSONA }, ...SAMPLES, ...history, { role: 'user', content: question }],
+              max_tokens: 350,
+              temperature: 0.4,
+              stream: false,
+            }),
+            signal: controller.signal,
+          });
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok || !data.choices || !data.choices[0]) {
+            lastError = (data.error && data.error.message) || ('HTTP ' + res.status);
+            continue;   // 拥堵或被拒，换下一个模型
+          }
+          const answer = data.choices[0].message && data.choices[0].message.content;
+          if (answer) return answer.trim();
+          lastError = '模型没有返回内容';
+        } catch (err) {
+          lastError = err.message;
+        } finally {
+          clearTimeout(timer);
+        }
+      }
+      throw new Error(lastError || '所有模型都没能回答');
     }
 
     let busy = false;
@@ -370,7 +469,10 @@
       const bubble = addMessage('正在想…', 'bot');
       bubble.classList.add('msg-wait');
       try {
-        bubble.textContent = await askAI(text);
+        const answer = directMode ? await askZhipu(text) : await askAI(text);
+        bubble.textContent = answer;
+        history.push({ role: 'user', content: text }, { role: 'assistant', content: answer });
+        if (history.length > 6) history.splice(0, history.length - 6);
       } catch (err) {
         bubble.textContent = findAnswer(text);
         const note = document.createElement('small');
@@ -389,9 +491,9 @@
       const ver = $('#twinVer');
       const status = $('#twinStatus');
       const sub = $('#twinSub');
-      if (ver) ver.textContent = 'v0.2 · 已接入 DeepSeek';
+      if (ver) ver.textContent = directMode ? 'v0.3 · 已接入智谱免费模型' : 'v0.3 · 已接入 AI（自建代理）';
       if (status) status.textContent = '在线，回答由 AI 生成，但边界和资料还是我定的';
-      if (sub) sub.textContent = '下面这个小助手由 DeepSeek 驱动，只依据我整理的《分身说明书》回答；接口不通时会自动回落到预设问答，答不上来它会直说。';
+      if (sub) sub.textContent = '下面这个小助手由 AI 驱动，只依据我整理的《分身说明书》回答；答不上来它会直说，接口不通时自动回落到预设问答。';
     }
 
     chatForm.addEventListener('submit', (e) => {
